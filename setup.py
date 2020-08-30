@@ -13,10 +13,13 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/imZain448/dumbledore",
     packages=setuptools.find_packages(),
+    package_data = {' ':['images/*']},
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU GPLv3",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    install_requires=['matplotlib' , 'seaborn' , 'pandas' , 'numpy']
 )
