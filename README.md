@@ -21,15 +21,15 @@ import pandas as pd
 ...
 db.basics.vis_feature((data , 'gender' , 'tenure', 'gist_earth_r' , target_continous=True , jitter=0.3)
 ```
-![data](images\data1.jpg)
+![data](images\data1.png)
 ![plot](images/plot1.png)
 
 2. when your feature and target both are continous
 ```python
 db.basics.vis_feature((data , 'tenure' , 'MonthlyCharges', 'gist_earth_r' , continous=True , target_continous=True )
 ```
-![data2](images\data2.jpg)
-![plot2](images\plot2.jpg)
+![data2](images\data2.png)
+![plot2](images\plot2.png)
 
 similarly you can feed in categorical target or categorical feature you have to keep in mind the two arguements
 >__continous__ : True if feature is continous, False if feature categorical <br>
