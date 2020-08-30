@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/imZain448/dumbledore",
     packages=setuptools.find_packages(),
-    package_data = {'images':['images/*']},
+    data_files = [('images',['images/*'])],
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
