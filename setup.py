@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dumbledore", # Replace with your own username
-    version="0.0.2",
+    version="0.0.3",
     author="imzain448",
     author_email="ahmadzain.448@gmail.com",
     description="a python package to visvalize features of data and observe relation without writing lots of codes",
@@ -13,7 +13,6 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/imZain448/dumbledore",
     packages=setuptools.find_packages(),
-    data_files = [('images',['images/*'])],
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
