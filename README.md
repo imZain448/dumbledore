@@ -32,8 +32,7 @@ db.basics.vis_feature((data , 'tenure' , 'MonthlyCharges', 'gist_earth_r' , cont
 ![plot2](images/plot2.png)
 
 similarly you can feed in categorical target or categorical feature you have to keep in mind the two arguements
->__continous__ : True if feature is continous, False if feature categorical <br>
-<br>
+>__continous__ : True if feature is continous, False if feature categorical 
 >__target_continous__ : True if target variable is continous , False if target variable is categorical
 
 
