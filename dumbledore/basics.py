@@ -1,7 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
+import seaborn as  sns
+from scipy import stats
+from matplotlib.gridspec import GridSpec
+
 
 def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,target_continous=False, jitter=False, save_fig=True):
     '''

@@ -39,7 +39,7 @@ similarly you can feed in categorical target or categorical feature you have to 
 
 
 ----
-__note__ : this module is still under development and has been released as alpha. so if you get any bug please open a issue without hesitation.
+__note__ : this module is still under development and has been released as alpha. so if you get any bug please open a issue without hesitation. or if you want a new feature please make a feature request
 
 > _THIS PRODUCT IS DISTRIBUTED UNDER GNU GPLv3 WHICH CAN BE FOUND IN THE LICENSE FILE_
 
