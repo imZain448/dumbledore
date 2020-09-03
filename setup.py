@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dumbledore",
-    version="0.0.4",
+    version="0.0.5",
     author="imzain448",
     author_email="ahmadzain.448@gmail.com",
     description="a python package to visvalize features of data and observe relation without writing lots of codes",
@@ -20,5 +20,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    install_requires=['matplotlib' , 'seaborn' , 'pandas' , 'numpy', 'scipy']
+    install_requires=['matplotlib' , 'seaborn' , 'pandas' , 'numpy', 'scipy','sklearn']
 )

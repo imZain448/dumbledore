@@ -5,8 +5,7 @@ import seaborn as  sns
 from scipy import stats
 from matplotlib.gridspec import GridSpec
 
-
-def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,target_continous=False, jitter=False, save_fig=True):
+def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,target_continous=False, jitter=False , save_fig=False):
     '''
     function to visualize and understand different features of the data set \n
         data(pd.dataframe) :  dataframe 
@@ -18,9 +17,12 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
         jitter(float/bool) : ammount of jitter for stripplot it is only required when you 
         \t\tare visualizing a continous varibale with respect to categorical target
         save_fig(bool) : if True saves the fig as plot.png in the working directory
+
+    returns
+        pandas.DataFrame object : dataframe containing the stats for the feature
     '''
     sns.set_palette(pallete)
-    
+    da = None
     # varibale cont , target cat
     if continous and not target_continous:
         # update
@@ -44,14 +46,38 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
         print(f'total outliers = {out_low + out_high}')
         print(f'number outliers on the right = {out_high} , (upper_bound = {ub})')
         print(f'number outliers on the left = {out_low} , (lower_bound = {lb})')
-        for c in n_classes:
+        df = data.loc[data[target] == n_classes[0], feature]
+        emp = {}
+        emp.update({'target' : n_classes[0]})
+        emp.update({'mean':df.mean()})
+        emp.update({'median':df.median()})
+        emp.update({'std':df.std()})
+        emp.update({'max' :df.max()})
+        emp.update({'min':df.min()})
+        q1 = df.quantile(0.25)
+        q3 = df.quantile(0.75)
+        IQR = q3 - q1
+        lb = q1 - 1.5*IQR
+        ub = q1 + 1.5*IQR
+        out_low = len(df[df < lb])
+        out_high = len(df[df > ub])
+        emp.update({'IQR' :IQR})
+        emp.update({'total outliers' :out_low + out_high})
+        emp.update({'number higher outliers' :out_high })
+        emp.update({'upper bound': ub})
+        emp.update({'number lower outliers':out_low})
+        emp.update({'lower bound':lb})
+        da = pd.DataFrame(columns=emp.keys())
+        da = da.append(emp , ignore_index=True)
+        for c in n_classes[1:]:
             df = data.loc[data[target] == c, feature]
-            print(f'for {target} = {c}')
-            print(f'\t # mean  = {df.mean()}')
-            print(f'\t # mdeian  = {df.median()}')
-            print(f'\t # std. deviation = {df.std()}')
-            print(f'\t # max = {df.max()}')
-            print(f'\t # min = {df.min()}')
+            emp = {}
+            emp.update({'target' : c})
+            emp.update({'mean':df.mean()})
+            emp.update({'median':df.median()})
+            emp.update({'std':df.std()})
+            emp.update({'max' :df.max()})
+            emp.update({'min':df.min()})
             q1 = df.quantile(0.25)
             q3 = df.quantile(0.75)
             IQR = q3 - q1
@@ -59,11 +85,14 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
             ub = q1 + 1.5*IQR
             out_low = len(df[df < lb])
             out_high = len(df[df > ub])
-            print(f'\t # IQR = {IQR} ')
-            print(f'\t # total outliers = {out_low + out_high}')
-            print(f'\t # number outliers on the right = {out_high} , (upper_bound = {ub})')
-            print(f'\t # number outliers on the left = {out_low} , (lower_bound = {lb})')
-
+            emp.update({'IQR' :IQR})
+            emp.update({'total outliers' :out_low + out_high})
+            emp.update({'number higher outliers' :out_high })
+            emp.update({'upper bound': ub})
+            emp.update({'number lower outliers':out_low})
+            emp.update({'lower bound':lb})
+            da = da.append(emp , ignore_index=True)
+        da = da.set_index('target')
         fig = plt.figure(figsize=(14,12))
         gs = GridSpec(3,3)
 
@@ -95,11 +124,12 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
     #varibale cont target cont
     elif continous and target_continous:
         print('feature = '+feature)
-        print(f'mean  = {data[feature].mean()}')
-        print(f'mdeian  = {data[feature].median()}')
-        print(f'std. deviation = {data[feature].std()}')
-        print(f'max = {data[feature].max()}')
-        print(f'min = {data[feature].min()}')
+        emp = {}
+        emp.update({'mean':data[feature].mean()})
+        emp.update({'mdeian':data[feature].median()})
+        emp.update({'std.':data[feature].std()})
+        emp.update({'max':data[feature].max()})
+        emp.update({'min':data[feature].min()})
         df = data[feature]
         dt = data[target]
         c_ov = np.cov(df, dt)
@@ -110,16 +140,19 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
         ub = q1 + 1.5*IQR
         out_low = len(df[df < lb])
         out_high = len(df[df > ub])
-        print(f'IQR = {IQR} ')
-        print(f'total outliers = {out_low + out_high}')
-        print(f'number outliers on the right = {out_high} , (upper_bound = {ub})')
-        print(f'number outliers on the left = {out_low} , (lower_bound = {lb})')
-        print(f'covariance of {feature} with target: {target} = {c_ov[0,1]}')
+        emp.update({'IQR':IQR})
+        emp.update({'total outliers':out_low + out_high})
+        emp.update({'number outliers on the right':out_high})
+        emp.update({'upper_bound':ub})
+        emp.update({'number outliers on the left':out_low})
+        emp.update({'lower_bound':lb})
+        emp.update({f"covariance of {feature} with {target}":c_ov[0,1]})
         pearson, _ = stats.pearsonr(df, dt)
-        print(f"Pearnson's Correlation = {pearson}")
+        emp.update({"Pearnson's Correlation":pearson})
         spearman, _ = stats.spearmanr(df, dt)
-        print(f"Spearman's Correlation = {spearman}")
-
+        emp.update({"Spearman's Correlation":spearman})
+        
+        da = pd.DataFrame(emp.values() ,columns=[feature] ,index=emp.keys())
         fig = plt.figure(figsize=(16, 12))
         gs = GridSpec(3,4)
 
@@ -173,13 +206,30 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
         print(f'value counts of each class for feature({feature}) \n {data[feature].value_counts()}')
         b_classes = data[feature].unique()
         print('Distribution accross target : '+target)
-        for b in b_classes:
+        df = data.loc[data[feature]==b_classes[0]]
+        emp = {}
+        emp.update({'counts_prop':len(df)/len(data)})
+        emp.update({'mean':df[target].mean()})
+        emp.update({'median':df[target].median()})
+        emp.update({'std':df[target].std()})
+        emp.update({'Q1':df[target].quantile(0.25)})
+        emp.update({'Q3':df[target].quantile(0.75)})
+        emp.update({'min':df[target].min()})
+        emp.update({'max':df[target].max()})
+        da = pd.DataFrame(emp.values() ,columns=[b_classes[0]] ,index=emp.keys())
+        for b in b_classes[1:]:
             df = data.loc[data[feature]==b]
-            print(f'for {feature} = {b}')
-            print(f'\t # counts  = {len(df)}')
-            print(f'\t # Distribution of {target}')
-            print(f'\t # mean = {df[target].mean()} | median = {df[target].median()} | std = {df[target].std()}')
-
+            emp = {}
+            emp.update({'counts_prop':len(df)/len(data)})
+            emp.update({'mean':df[target].mean()})
+            emp.update({'median':df[target].median()})
+            emp.update({'std':df[target].std()})
+            emp.update({'Q1':df[target].quantile(0.25)})
+            emp.update({'Q3':df[target].quantile(0.75)})
+            emp.update({'min':df[target].min()})
+            emp.update({'max':df[target].max()})
+            dx = pd.DataFrame(emp.values() ,columns=[b] ,index=emp.keys())
+            da = pd.concat([da,dx] , axis=1)
         fig = plt.figure(figsize=(10, 14))
         gs = GridSpec(3,2)
 
@@ -207,12 +257,17 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
         n_classes = data[target].unique()
         b_classes = data[feature].unique()
         print('Distribution accross target : '+target)
-        for c in n_classes:
-            df = data.loc[data[target]==c]
-            print(f'for {target} = {c}')
-            dic = (df[feature].value_counts()).to_dict()
-            for b in b_classes:
-                print(f'\t {b} = {dic[b]}')
+        da = data.loc[data[target]==n_classes[0]]
+        da = da[feature].value_counts()
+        da = pd.DataFrame(da)
+        da = da/da.sum()
+        da = da.rename(columns={da.columns[0]:n_classes[0]})
+        for c in n_classes[1:]:
+            x = data.loc[data[target]==c]
+            x = x[feature].value_counts()
+            x = x/x.sum()
+            da[c] = x
+
         fig = plt.figure(figsize=(12,5))
         gs = GridSpec(1,3)
         fig.add_subplot(gs[0,0])
@@ -227,4 +282,6 @@ def vis_feature(data , feature ,target, pallete='gist_earth' , continous=False ,
     
     fig.tight_layout(pad=2)
     if save_fig:
-        plt.savefig('plot.png' , pad_inches=0.2)
+        plt.savefig('plot.png' , pad_inches=0.2,paper_size='a3')
+    
+    return da

@@ -47,5 +47,5 @@ __developed by__ : [imzain448](https://github.com/imZain448) <br>
 meet me on
 - [Linkedin](https://www.linkedin.com/in/zain-ahmad-15aa25162/)
 - [Instagram](https://www.instagram.com/imzain448/?hl=en)
-- [Gmail : ahmadzain.448@gmail.com]
+- Gmail : ahmadzain.448@gmail.com
 
